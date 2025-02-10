@@ -1,0 +1,3 @@
+Setting up graphql server:
+    install : apollo server , graphql
+    import : apollo server , standaloneserver
