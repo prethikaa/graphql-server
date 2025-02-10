@@ -9,25 +9,45 @@ const users = [
 
 const typeDefs = `
 type Query {
-getUsers: [User]
-getUserById (id:ID!): User
-
+    getUsers: [User]
+    getUserById (id:ID!): User
 }
 
 type Mutation {
-createUser(name: String!, age: Int!, isMarried:Boolean!):User
+    createUser(name: String!, age: Int!, isMarried:Boolean!):User
 }
 
 type User{
-id: ID
-name : String
-age: Int
-isMarried: Boolean
-
+    id: ID
+    name : String
+    age: Int
+    isMarried: Boolean
 }
 
 `;
-const resolvers = {};
+const resolvers = {
+  Query: {
+    getUsers: () => {
+      return users;
+    },
+    getUserById: (parent, args) => {
+      const id = args.id;
+      return users.find((user) => user.id == id);
+    },
+  },
+  Mutation: {
+    createUser: (parent, args) => {
+      const { name, age, isMarried } = args;
+      const newUser = {
+        id: users.length + 1,
+        name,
+        age,
+        isMarried,
+      };
+      users.push(newUser);
+    },
+  },
+};
 const server = new ApolloServer({ typeDefs, resolvers });
 
 const { url } = await startStandaloneServer(server, {
